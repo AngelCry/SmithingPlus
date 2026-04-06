@@ -28,8 +28,8 @@ public static class RegenMeshPostfixPatch
         ___recipeOutlineMeshRef?.Dispose();
         ___workItemMeshRef = null;
         ___recipeOutlineMeshRef = null;
-        var workItemMeshData = ItemWorkItem.GenMesh(___api, workitemStack, voxels, out var texId);
-        ___texId = texId;
+        var workItemMeshData = ItemWorkItem.GenMesh(___api, workitemStack, voxels); //, out var texId);
+        //___texId = texId;
         var recipeOutlineMeshData = GenOutlineMesh(___api, recipeToOutlineVoxels, voxels);
         for (var i = 0; i < workItemMeshData.xyz.Length; i += 3)
             workItemMeshData.xyz[i + 1] += yOffset;

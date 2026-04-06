@@ -32,13 +32,13 @@ public class CastToolPenaltyPatch
     [HarmonyPatch(typeof(CollectibleObject), nameof(CollectibleObject.OnCreatedByCrafting))]
     [HarmonyPriority(Priority.Last)]
     public static void Postfix_OnCreatedByCrafting(
-        ItemSlot[] allInputslots,
+        ItemSlot[] allInputSlots,
         ItemSlot outputSlot,
         GridRecipe byRecipe)
     {
         if (outputSlot.Itemstack == null)
             return;
-        var castToolsHeads = allInputslots
+        var castToolsHeads = allInputSlots
             .Where(slot => !slot.Empty)
             .Select(slot => slot.Itemstack)
             .Where(stack =>

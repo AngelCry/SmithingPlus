@@ -12,25 +12,28 @@ public class CollectibleBehaviorRecycledBit(CollectibleObject collObj) : Collect
     private ICoreAPI Api => collObj.GetField<ICoreAPI>("api");
 
     public override void OnCreatedByCrafting(
-        ItemSlot[] allInputslots,
+        ItemSlot[] allInputSlots,
         ItemSlot outputSlot,
-        GridRecipe byRecipe,
+        IRecipeBase byRecipe,
         ref EnumHandling bhHandling)
     {
-        base.OnCreatedByCrafting(allInputslots, outputSlot, byRecipe, ref bhHandling);
+        base.OnCreatedByCrafting(allInputSlots, outputSlot, byRecipe, ref bhHandling);
         if (outputSlot?.Itemstack == null ||
-            allInputslots == null ||
-            byRecipe?.resolvedIngredients == null)
+            allInputSlots == null ||
+            byRecipe == null)
             return;
 
+        var gridRecipe = byRecipe as GridRecipe;
+        var resolvedIngredients = gridRecipe?.ResolvedIngredients;
+
         // Identify recipe tools from ingredients
-        var toolIngredients = byRecipe.resolvedIngredients
+        var toolIngredients = resolvedIngredients
             .Where(ing =>
                 ing is { IsTool: true } ||
                 ing?.RecipeAttributes?[ModRecipeAttributes.RecyclingRecipe]?.AsBool() == true)
             .ToArray() ?? [];
 
-        var metalInputSlots = allInputslots
+        var metalInputSlots = allInputSlots
             .Where(s => s?.Itemstack != null)
             .Where(s => !IsToolStack(s.Itemstack, toolIngredients))
             .Where(s => s.Itemstack?.GetOrCacheMetalMaterial(Api)?.IngotStack != null)
@@ -61,17 +64,17 @@ public class CollectibleBehaviorRecycledBit(CollectibleObject collObj) : Collect
                 var cheapestRecipe = stack.GetCheapestSmithingRecipe(Api);
                 if (cheapestRecipe != null)
                 {
-                    var cheapestOutput = Math.Max(cheapestRecipe.Output.ResolvedItemstack.StackSize, 1);
+                    var cheapestOutput = Math.Max(cheapestRecipe.Output.ResolvedItemStack.StackSize, 1);
                     var recipeMaterialVoxels = cheapestRecipe.Voxels.VoxelCount();
                     var voxelsPerItem = Math.Max(recipeMaterialVoxels / cheapestOutput, 0);
 
                     var consumedStackSize =
                         0; // Use this NOT stack.StackSize because that could have more items than the recipe requires
-                    foreach (var ingredient in byRecipe.resolvedIngredients)
+                    foreach (var ingredient in resolvedIngredients)
                     {
                         if (!ingredient.SatisfiesAsIngredient(stack))
                             continue;
-                        consumedStackSize = ingredient.ResolvedItemstack.StackSize;
+                        consumedStackSize = ingredient.ResolvedItemStack.StackSize;
                         break;
                     }
 
@@ -94,7 +97,7 @@ public class CollectibleBehaviorRecycledBit(CollectibleObject collObj) : Collect
         outputSlot.Itemstack.Collectible.SetTemperature(Api.World, outputSlot.Itemstack, temperature);
     }
 
-    private static bool IsToolStack(ItemStack stack, GridRecipeIngredient[] toolIngredients)
+    private static bool IsToolStack(ItemStack stack, CraftingRecipeIngredient[] toolIngredients)
     {
         return stack != null && toolIngredients.Any(ing => ing?.SatisfiesAsIngredient(stack) == true);
     }
