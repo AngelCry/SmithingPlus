@@ -128,7 +128,7 @@ public static class ItemStackExtensions
         var smithingRecipe = api.ModLoader
             .GetModSystem<RecipeRegistrySystem>()?
             .SmithingRecipes?
-            .FirstOrDefault(r => r?.Output?.ResolvedItemstack?.Satisfies(toolHead) == true);
+            .FirstOrDefault(r => r?.Output?.ResolvedItemStack?.Satisfies(toolHead) == true);
         return smithingRecipe;
     }
 
@@ -138,8 +138,8 @@ public static class ItemStackExtensions
             .GetModSystem<RecipeRegistrySystem>()?
             .SmithingRecipes?
             .FirstOrDefault(r =>
-                r?.Output?.ResolvedItemstack?.Satisfies(toolHead) == true
-                && r.Output.ResolvedItemstack.StackSize == withOutputStackSize);
+                r?.Output?.ResolvedItemStack?.Satisfies(toolHead) == true
+                && r.Output.ResolvedItemStack.StackSize == withOutputStackSize);
         return smithingRecipe;
     }
 
@@ -149,8 +149,8 @@ public static class ItemStackExtensions
         var smithingRecipe = api.ModLoader
                 .GetModSystem<RecipeRegistrySystem>()?
                 .SmithingRecipes?
-                .Where(r => r?.Output?.ResolvedItemstack?.Satisfies(toolHead) == true)
-                .OrderByDescending(r => r.Output.ResolvedItemstack.StackSize)
+                .Where(r => r?.Output?.ResolvedItemStack?.Satisfies(toolHead) == true)
+                .OrderByDescending(r => r.Output.ResolvedItemStack.StackSize)
                 .FirstOrDefault()
             ;
         return smithingRecipe;
@@ -162,8 +162,8 @@ public static class ItemStackExtensions
         var smithingRecipe = api.ModLoader
                 .GetModSystem<RecipeRegistrySystem>()?
                 .SmithingRecipes?
-                .Where(r => r?.Output?.ResolvedItemstack?.Satisfies(toolHead) == true)
-                .OrderByDescending(r => r.Voxels.VoxelCount() / r.Output.ResolvedItemstack.StackSize)
+                .Where(r => r?.Output?.ResolvedItemStack?.Satisfies(toolHead) == true)
+                .OrderByDescending(r => r.Voxels.VoxelCount() / r.Output.ResolvedItemStack.StackSize)
                 .FirstOrDefault()
             ;
         return smithingRecipe;
@@ -173,7 +173,7 @@ public static class ItemStackExtensions
     {
         var gridRecipes =
             from recipe in api.World.GridRecipes
-            where recipe.Output?.ResolvedItemstack?.Satisfies(itemStack) == true
+            where recipe.Output?.ResolvedItemStack?.Satisfies(itemStack) == true
             select recipe;
         return gridRecipes;
     }

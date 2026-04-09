@@ -76,7 +76,7 @@ public static class CollectibleExtensions
         var smithingRecipe = api.ModLoader
             .GetModSystem<RecipeRegistrySystem>()
             .SmithingRecipes
-            .FirstOrDefault(r => r.Output.ResolvedItemstack.Collectible.Code.Equals(collObj.Code));
+            .FirstOrDefault(r => r.Output.ResolvedItemStack.Collectible.Code.Equals(collObj.Code));
         return smithingRecipe;
     }
 
@@ -86,8 +86,8 @@ public static class CollectibleExtensions
         var smithingRecipes =
             from recipe in api.ModLoader.GetModSystem<RecipeRegistrySystem>().SmithingRecipes
             from ing in recipe.Ingredients
-            where ing.ResolvedItemstack is not null &&
-                  ing.ResolvedItemstack.Collectible.Code.Equals(collObj.Code)
+            where ing.ResolvedItemStack is not null &&
+                  ing.ResolvedItemStack.Collectible.Code.Equals(collObj.Code)
             select recipe;
         return smithingRecipes;
     }
@@ -96,10 +96,10 @@ public static class CollectibleExtensions
     {
         var gridRecipes =
             from recipe in api.World.GridRecipes
-            where recipe.resolvedIngredients != null
-            from ing in recipe.resolvedIngredients
-            where ing is { ResolvedItemstack.Collectible: not null } &&
-                  ing.ResolvedItemstack.Collectible.Code.Equals(collObj.Code)
+            where recipe.ResolvedIngredients != null
+            from ing in recipe.ResolvedIngredients
+            where ing is { ResolvedItemStack.Collectible: not null } &&
+                  ing.ResolvedItemStack.Collectible.Code.Equals(collObj.Code)
             select recipe;
         return gridRecipes;
     }
